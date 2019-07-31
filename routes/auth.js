@@ -8,7 +8,7 @@ const User = require('../models/User');
 // Bcrypt to encrypt passwords
 const bcryptSalt = 10;
 
-
+// Sign up
 router.post('/signup', (req, res) => {
   const { username, password } = req.body;
 
@@ -64,6 +64,7 @@ router.post('/signup', (req, res) => {
   });
 });
 
+// Login
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, theUser, failureDetails) => {
     if (err) {
@@ -91,13 +92,14 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
+// Logout
 router.post('/logout', (req, res) => {
   // req.logout() is defined by passport
   req.logout();
   res.status(200).json({ message: 'Log out success!' });
 });
 
-
+// Check logged user
 router.get('/loggedin', (req, res) => {
   if (req.isAuthenticated()) {
     res.status(200).json(req.user);
