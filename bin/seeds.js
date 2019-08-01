@@ -2,15 +2,17 @@
 
 // To execute this seed, run from the root of the project
 // $ node bin/seeds.js
+require('dotenv').config();
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const Category = require('../models/Category');
 
 const bcryptSalt = 10;
 
 mongoose
-  .connect('mongodb://localhost/inkinc-fullstack-mern-server', { useNewUrlParser: true })
+  .connect(process.env.MONGODB_URI, { useNewUrlParser: true })
   .then((x) => {
     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`);
   })
@@ -20,14 +22,15 @@ mongoose
 
 const users = [
   {
-    username: 'alice',
+    email: 'alice',
     password: bcrypt.hashSync('alice', bcrypt.genSaltSync(bcryptSalt)),
   },
   {
-    username: 'bob',
+    email: 'bob',
     password: bcrypt.hashSync('bob', bcrypt.genSaltSync(bcryptSalt)),
   },
 ];
+
 
 User.deleteMany()
   .then(() => User.create(users))
@@ -36,7 +39,58 @@ User.deleteMany()
     console.log(usersCreated.map(u => u._id));
   })
   .then(() => {
-  // Close properly the connection to Mongoose
+    // Close properly the connection to Mongoose
+    mongoose.disconnect();
+  })
+  .catch((err) => {
+    mongoose.disconnect();
+    throw err;
+  });
+
+const categories = [
+  {
+    tag: 'Traditional',
+  },
+  {
+    tag: 'Realism',
+  },
+  {
+    tag: 'Tribal',
+  },
+  {
+    tag: 'Japanese',
+  },
+  {
+    tag: 'Watercolor',
+  },
+  {
+    tag: 'Leterring',
+  },
+  {
+    tag: 'New School',
+  },
+  {
+    tag: 'Blackwork',
+  },
+  {
+    tag: 'Dotwork',
+  },
+  {
+    tag: 'Geometric',
+  },
+  {
+    tag: 'Fine Line',
+  },
+];
+
+Category.deleteMany()
+  .then(() => Category.create(categories))
+  .then((categoriesCreated) => {
+    console.log(`${categoriesCreated.length} categories created with the following id:`);
+    console.log(categoriesCreated.map(u => u._id));
+  })
+  .then(() => {
+    // Close properly the connection to Mongoose
     mongoose.disconnect();
   })
   .catch((err) => {

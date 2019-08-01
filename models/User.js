@@ -6,7 +6,7 @@ const userSchema = new Schema({
   email: String,
   password: String,
   name: { type: String, require: true },
-  type: { type: String, enum: ['User', 'Artist'] },
+  role: { type: String, enum: ['User', 'Artist'] },
   profileImg: String,
   tattooRef: [{
     name: String,
