@@ -10,58 +10,63 @@ const bcryptSalt = 10;
 
 // Sign up
 router.post('/signup', (req, res) => {
-  const { username, password } = req.body;
+  // ---------------------------------------> Sign up if it is a User
+  if (req.body.role === 'User') {
+    const { email, password, name, role } = req.body;
 
-  if (!username || !password) {
-    res.status(400).json({ message: 'Provide username and password' });
-    return;
-  }
-
-  if (password.length < 7) {
-    res.status(400).json({ message: 'Please make your password at least 8 characters long for security purposes.' });
-    return;
-  }
-
-  User.findOne({ username }, 'username', (err, user) => {
-
-    if (err) {
-      res.status(500).json({ message: 'Username check went bad.' });
+    if (!email || !password || !name) {
+      res.status(400).json({ message: 'Provide email, password and your name' });
       return;
     }
 
-    if (user) {
-      res.status(400).json({ message: 'Username taken. Choose another one.' });
+    if (password.length < 7) {
+      res.status(400).json({ message: 'Please make your password at least 8 characters long for security purposes.' });
       return;
     }
 
-    const salt = bcrypt.genSaltSync(bcryptSalt);
-    const hashPass = bcrypt.hashSync(password, salt);
-
-    const newUser = new User({
-      username,
-      password: hashPass,
-    });
-
-    newUser.save((error) => {
-      if (error) {
-        res.status(400).json({ message: 'Saving user to database went wrong.' });
+    User.findOne({ email }, 'email', (err, user) => {
+      if (err) {
+        res.status(500).json({ message: 'Email check went bad.' });
         return;
       }
 
-      // Automatically log in user after sign up
-      // .login() here is actually predefined passport method
-      req.login(newUser, (error) => {
-        if (err) {
-          res.status(500).json({ message: 'Login after signup went bad.' });
+      if (user) {
+        res.status(400).json({ message: 'Email already in use.' });
+        return;
+      }
+
+      const salt = bcrypt.genSaltSync(bcryptSalt);
+      const hashPass = bcrypt.hashSync(password, salt);
+
+      const newUser = new User({
+        email,
+        password: hashPass,
+        name,
+        role,
+      });
+
+      newUser.save((error) => {
+        if (error) {
+          res.status(400).json({ message: 'Saving user to database went wrong.' });
           return;
         }
 
-        // Send the user's information to the frontend
-        // We can use also: res.status(200).json(req.user);
-        res.status(200).json(newUser);
+        // Automatically log in user after sign up
+        // .login() here is actually predefined passport method
+        req.login(newUser, (error) => {
+          if (err) {
+            res.status(500).json({ message: 'Login after signup went bad.' });
+            return;
+          }
+
+          // Send the user's information to the frontend
+          // We can use also: res.status(200).json(req.user);
+          res.status(200).json(newUser);
+        });
       });
     });
-  });
+
+  }
 });
 
 // Login
