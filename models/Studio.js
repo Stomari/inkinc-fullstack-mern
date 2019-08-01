@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const studioSchema = new Schema({
   studioName: String,
   googleId: String,
-  adress: String,
+  address: String,
   lati: Number,
   long: Number,
 }, {
