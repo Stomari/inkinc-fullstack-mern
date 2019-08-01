@@ -15,7 +15,7 @@ const userSchema = new Schema({
   favoriteArtist: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   about: String,
   // Artist
-  workplace: [{ type: Schema.Types.ObjectId, ref: 'Studio' }],
+  workplace: [],
   flash: [{
     name: String,
     price: String,

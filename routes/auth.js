@@ -73,7 +73,7 @@ router.post('/signup', (req, res) => {
 
   // ---------------------------------------> Sign up if it is an Artist
   if (req.body.role === 'Artist') {
-    const { email, password, name, role, category } = req.body;
+    const { email, password, name, role, category, workplace } = req.body;
 
     if (!email || !password || !name) {
       res.status(400).json({ message: 'Provide email, password and your name' });
@@ -106,7 +106,7 @@ router.post('/signup', (req, res) => {
         role,
         profileImg: 'https://icon-library.net/images/default-profile-icon/default-profile-icon-24.jpg',
         about: '',
-        workplace: [],
+        workplace,
         flash: [],
         artistTattoo: [],
         category,
