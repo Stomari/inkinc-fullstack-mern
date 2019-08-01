@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const studioSchema = new Schema({
-  name: String,
+  studioName: String,
+  googleId: String,
   adress: String,
   lati: Number,
   long: Number,
