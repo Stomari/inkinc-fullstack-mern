@@ -58,12 +58,11 @@ require('./passport')(app);
 
 
 const index = require('./routes/index');
+const authRoutes = require('./routes/auth');
+const artistRoutes = require('./routes/artist');
 
 app.use('/', index);
-
-const authRoutes = require('./routes/auth');
-
 app.use('/api', authRoutes);
-
+app.use('/api', artistRoutes);
 
 module.exports = app;

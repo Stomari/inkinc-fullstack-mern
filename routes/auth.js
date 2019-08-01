@@ -10,7 +10,7 @@ const bcryptSalt = 10;
 
 // Sign up
 router.post('/signup', (req, res) => {
-  // ---------------------------------------> Sign up if it is a User
+  // ---------------------------------------> Sign up if it is an User
   if (req.body.role === 'User') {
     const { email, password, name, role } = req.body;
 
@@ -43,6 +43,10 @@ router.post('/signup', (req, res) => {
         password: hashPass,
         name,
         role,
+        profileImg: 'https://icon-library.net/images/default-profile-icon/default-profile-icon-24.jpg',
+        tattooRef: [],
+        favoriteArtist: [],
+        about: '',
       });
 
       newUser.save((error) => {
@@ -65,7 +69,69 @@ router.post('/signup', (req, res) => {
         });
       });
     });
+  }
 
+  // ---------------------------------------> Sign up if it is an Artist
+  if (req.body.role === 'Artist') {
+    const { email, password, name, role, category } = req.body;
+
+    if (!email || !password || !name) {
+      res.status(400).json({ message: 'Provide email, password and your name' });
+      return;
+    }
+
+    if (password.length < 7) {
+      res.status(400).json({ message: 'Please make your password at least 8 characters long for security purposes.' });
+      return;
+    }
+
+    User.findOne({ email }, 'email', (err, user) => {
+      if (err) {
+        res.status(500).json({ message: 'Email check went bad.' });
+        return;
+      }
+
+      if (user) {
+        res.status(400).json({ message: 'Email already in use.' });
+        return;
+      }
+
+      const salt = bcrypt.genSaltSync(bcryptSalt);
+      const hashPass = bcrypt.hashSync(password, salt);
+
+      const newUser = new User({
+        email,
+        password: hashPass,
+        name,
+        role,
+        profileImg: 'https://icon-library.net/images/default-profile-icon/default-profile-icon-24.jpg',
+        about: '',
+        workplace: [],
+        flash: [],
+        artistTattoo: [],
+        category,
+      });
+
+      newUser.save((error) => {
+        if (error) {
+          res.status(400).json({ message: 'Saving user to database went wrong.' });
+          return;
+        }
+
+        // Automatically log in user after sign up
+        // .login() here is actually predefined passport method
+        req.login(newUser, (error) => {
+          if (err) {
+            res.status(500).json({ message: 'Login after signup went bad.' });
+            return;
+          }
+
+          // Send the user's information to the frontend
+          // We can use also: res.status(200).json(req.user);
+          res.status(200).json(newUser);
+        });
+      });
+    });
   }
 });
 
