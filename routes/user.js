@@ -7,6 +7,7 @@ const Folder = require('../models/Folder');
 
 // Find logged user
 router.get('/user', (req, res) => {
+  console.log('AQUI USER REQ', req.user)
   User.findById(req.user.id)
     .populate('folder')
     // .populate({ path: 'folder', populate: { path: 'image', model: 'Tattoo' } })
