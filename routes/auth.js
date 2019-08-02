@@ -44,9 +44,8 @@ router.post('/signup', (req, res) => {
         name,
         role,
         profileImg: 'https://icon-library.net/images/default-profile-icon/default-profile-icon-24.jpg',
-        tattooRef: [],
+        folder: [],
         favoriteArtist: [],
-        about: '',
       });
 
       newUser.save((error) => {
@@ -58,7 +57,7 @@ router.post('/signup', (req, res) => {
         // Automatically log in user after sign up
         // .login() here is actually predefined passport method
         req.login(newUser, (error) => {
-          if (err) {
+          if (error) {
             res.status(500).json({ message: 'Login after signup went bad.' });
             return;
           }
@@ -121,7 +120,7 @@ router.post('/signup', (req, res) => {
         // Automatically log in user after sign up
         // .login() here is actually predefined passport method
         req.login(newUser, (error) => {
-          if (err) {
+          if (error) {
             res.status(500).json({ message: 'Login after signup went bad.' });
             return;
           }

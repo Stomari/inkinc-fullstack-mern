@@ -8,10 +8,7 @@ const userSchema = new Schema({
   name: { type: String, require: true },
   role: { type: String, enum: ['User', 'Artist'] },
   profileImg: String,
-  tattooRef: [{
-    name: String,
-    image: [{ type: Schema.Types.ObjectId, ref: 'Tattoo' }],
-  }],
+  folder: [{ type: Schema.Types.ObjectId, ref: 'Folder' }],
   favoriteArtist: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   about: String,
   // Artist
