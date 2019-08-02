@@ -64,7 +64,7 @@ const categories = [
     tag: 'Watercolor',
   },
   {
-    tag: 'Leterring',
+    tag: 'Lettering',
   },
   {
     tag: 'New School',
