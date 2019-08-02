@@ -9,7 +9,7 @@ const Tattoo = require('../models/Tattoo');
 
 router.get('/artists', (req, res) => {
   User.find({ role: 'Artist' })
-    // .populate('category')
+    .populate('artistTattoo')
     .then(artists => res.json(artists))
     .catch(err => res.json(err));
 });
@@ -21,7 +21,7 @@ router.get('/artists/:id', (req, res) => {
   }
 
   User.findById(req.params.id)
-    // .populate('category')
+    .populate('artistTattoo')
     .then(artist => res.status(200).json(artist))
     .catch(err => res.json(err));
 });
@@ -51,6 +51,7 @@ router.get('/artists/:id', (req, res) => {
 
 router.post('/artists/:id/add-tattoo', (req, res) => {
   let { tag, image, category, artist } = req.body;
+  category = category.split(', ');
   tag = tag.split(',');
 
   const newTattoo = new Tattoo({
