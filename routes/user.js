@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const router = express.Router();
 const User = require('../models/User');
@@ -9,8 +10,7 @@ const Folder = require('../models/Folder');
 router.get('/user', (req, res) => {
   console.log('AQUI USER REQ', req.user)
   User.findById(req.user.id)
-    .populate('folder')
-    // .populate({ path: 'folder', populate: { path: 'image', model: 'Tattoo' } })
+    .populate('folder favoriteArtist')
     .then(user => res.json(user))
     .catch(err => res.json(err));
 });
@@ -29,7 +29,20 @@ router.post('/create-folder', (req, res) => {
         .catch(err => res.status(400).json(err));
     })
     .catch(err => res.status(400).json(err));
+});
 
+// Delete folder
+router.delete('/delete-folder/:folderId', (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.folderId)) {
+    res.status(400).json({ message: 'Specified id is not valid' });
+    return;
+  }
+
+  Folder.findByIdAndRemove(req.params.folderId)
+    .then(() => {
+      res.json({ message: `Folder with ${req.params.folderId} is removed successfully.` });
+    })
+    .catch(err => res.json(err));
 });
 
 // Add tattoo to designated folder
@@ -44,52 +57,32 @@ router.post('/add-tattoo', (req, res) => {
     .catch(err => res.status(400).json(err));
 });
 
-// router.delete('/artists/:id/add-tattoo', (req, res) => {
-//   let { tag, image, category, artist } = req.body;
-//   tag = tag.split(',');
+// Remove tattoo inside designated folder
+router.put('/folder/:folderId/remove/:tattooId', (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.folderId)) {
+    res.status(400).json({ message: 'Specified id is not valid' });
+    return;
+  }
 
-//   const newTattoo = new Tattoo({
-//     tag,
-//     image,
-//     category,
-//     artist,
-//   });
-
-//   newTattoo.save()
-//     .then((response) => {
-//       User.findOneAndUpdate({ _id: req.params.id }, { $push: { artistTattoo: response } })
-//         .populate('artistTattoo')
-//         .then((response) => {
-//           res.status(200).json(response)
-//         })
-//         .catch(err => res.json(err));
-//     })
-//     .catch(err => res.json(err));
-// });
-
-router.post('/artists/:id/add-tattoo', (req, res) => {
-  let { tag, image, category, artist } = req.body;
-  category = category.split(', ');
-  tag = tag.split(',');
-
-  const newTattoo = new Tattoo({
-    tag,
-    image,
-    category,
-    artist,
-  });
-
-  newTattoo.save()
-    .then((response) => {
-      User.findOneAndUpdate({ _id: req.params.id }, { $push: { artistTattoo: response } })
-        .populate('artistTattoo')
-        .then((response) => {
-          res.status(200).json(response)
-        })
-        .catch(err => res.json(err));
+  Folder.findByIdAndUpdate(req.params.folderId, { $pull: { image: req.params.tattooId } })
+    .then(() => {
+      res.json({ message: `Folder with ${req.params.folderId} is updated successfully.` });
     })
-    .catch(err => res.json(err));
+    .catch((err) => {
+      res.json(err);
+    });
 });
 
+// Add favorite Artist
+router.put('/favorite-artist/:artistId', (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.artistId)) {
+    res.status(400).json({ message: 'Specified id is not valid' });
+    return;
+  }
+
+  User.findByIdAndUpdate(req.user.id, { $push: { favoriteArtist: req.params.artistId } })
+    .then(() => res.json({ message: `User with ${req.params.artistId} is updated successfully.` }))
+    .catch(err => res.json(err));
+});
 
 module.exports = router;

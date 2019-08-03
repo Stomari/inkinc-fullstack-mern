@@ -18,21 +18,6 @@ router.get('/tattoo', (req, res) => {
     .catch(err => res.json(err));
 });
 
-// router.get('/tattoo/:tag', (req, res) => {
-//   let { tag } = req.params;
-//   if (tag.includes('-')) {
-//     tag = tag.split('-').join(' ');
-//   }
-//   Category.find({ tag })
-//     .then((category) => {
-//       Tattoo.find({ category: category[0].id })
-//         .populate('artist')
-//         .then(tattoo => res.json(tattoo))
-//         .catch(err => res.json(err));
-//     })
-//     .catch(err => res.json(err));
-// });
-
 router.get('/tattoo/:id', (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({ message: 'Specified id is not valid' });
