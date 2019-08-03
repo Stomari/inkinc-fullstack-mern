@@ -5,6 +5,8 @@ const router = express.Router();
 const User = require('../models/User');
 const Tattoo = require('../models/Tattoo');
 const Folder = require('../models/Folder');
+const uploader = require('../configs/cloudinary-setup');
+
 
 // Find logged user
 router.get('/user', (req, res) => {
@@ -14,6 +16,22 @@ router.get('/user', (req, res) => {
     .then(user => res.json(user))
     .catch(err => res.json(err));
 });
+
+// Edit profile picture
+router.put('/profile-pic', uploader.single('imgUrl'), (req, res, next) => {
+  if (!req.file) {
+    next(new Error('No file uploaded!'));
+    return;
+  }
+
+  User.findByIdAndUpdate(req.user.id, { $set: { profileImg: req.file.secure_url } })
+    .then(() => {
+      res.json({ message: `User with ${req.user.id} is updated successfully.` });
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+})
 
 // Create empty folder
 router.post('/create-folder', (req, res) => {
