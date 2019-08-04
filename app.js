@@ -54,6 +54,7 @@ app.use(session({
   store: new MongoStore({ mongooseConnection: mongoose.connection }),
 }));
 app.use(flash());
+
 require('./passport')(app);
 
 
@@ -61,10 +62,12 @@ const index = require('./routes/index');
 const authRoutes = require('./routes/auth');
 const artistRoutes = require('./routes/artist');
 const tattooRoutes = require('./routes/tattoo');
+const userRoutes = require('./routes/user');
 
 app.use('/', index);
 app.use('/api', authRoutes);
 app.use('/api', artistRoutes);
 app.use('/api', tattooRoutes);
+app.use('/api', userRoutes);
 
 module.exports = app;
