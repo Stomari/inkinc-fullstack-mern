@@ -10,9 +10,8 @@ const uploader = require('../configs/cloudinary-setup');
 
 // Find logged user
 router.get('/user', (req, res) => {
-  console.log('AQUI USER REQ', req.user)
   User.findById(req.user.id)
-    .populate('folder favoriteArtist')
+    .populate('folder favoriteArtist artistTattoo flash')
     .then(user => res.json(user))
     .catch(err => res.json(err));
 });
@@ -99,6 +98,18 @@ router.put('/favorite-artist/:artistId', (req, res) => {
   }
 
   User.findByIdAndUpdate(req.user.id, { $push: { favoriteArtist: req.params.artistId } })
+    .then(() => res.json({ message: `User with ${req.params.artistId} is updated successfully.` }))
+    .catch(err => res.json(err));
+});
+
+// Remove favorite Artist
+router.put('/favorite-artist-remove/:artistId', (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.artistId)) {
+    res.status(400).json({ message: 'Specified id is not valid' });
+    return;
+  }
+
+  User.findByIdAndUpdate(req.user.id, { $pull: { favoriteArtist: req.params.artistId } })
     .then(() => res.json({ message: `User with ${req.params.artistId} is updated successfully.` }))
     .catch(err => res.json(err));
 });

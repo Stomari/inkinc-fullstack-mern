@@ -10,15 +10,10 @@ const userSchema = new Schema({
   profileImg: String,
   folder: [{ type: Schema.Types.ObjectId, ref: 'Folder' }],
   favoriteArtist: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  about: String,
   // Artist
+  about: String,
   workplace: [],
-  flash: [{
-    name: String,
-    price: String,
-    image: String,
-    hidden: Boolean,
-  }],
+  flash: [{ type: Schema.Types.ObjectId, ref: 'Flash' }],
   artistTattoo: [{ type: Schema.Types.ObjectId, ref: 'Tattoo' }],
   category: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
 }, {
