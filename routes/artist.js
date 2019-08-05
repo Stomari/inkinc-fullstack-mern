@@ -23,7 +23,7 @@ router.get('/artists/:id', (req, res) => {
   }
 
   User.findById(req.params.id)
-    .populate('artistTattoo', 'workplace')
+    .populate('artistTattoo flash')
     .then(artist => res.status(200).json(artist))
     .catch(err => res.json(err));
 });
@@ -37,20 +37,15 @@ router.put('/edit-artist', uploader.single('imgUrl'), (req, res) => {
 });
 
 // Add Tattoo to artist
-router.post('/add-tattoo', uploader.single('imgUrl'), (req, res, next) => {
-  if (!req.file) {
-    next(new Error('No file uploaded!'));
-    return;
-  }
+router.post('/add-tattoo', (req, res, next) => {
 
-  let { tag, category } = req.body;
+  let { tag, image, category } = req.body;
 
-  category = category.split(', ');
-  tag = tag.split(',');
+  tag = tag.split(', ');
 
   const newTattoo = new Tattoo({
     tag,
-    image: req.file.secure_url,
+    image,
     category,
     artist: req.user.id,
   });
@@ -88,20 +83,20 @@ router.put('/remove-tattoo/:tattooId', (req, res) => {
 });
 
 // Add flash tattoo
-router.post('/add-flash', uploader.single('imgUrl'), (req, res, next) => {
-  if (!req.file) {
-    next(new Error('No file uploaded!'));
-    return;
-  }
+router.post('/add-flash', (req, res, next) => {
+  // if (!req.file) {
+  //   next(new Error('No file uploaded!'));
+  //   return;
+  // }
 
-  let { tag, category, price } = req.body;
+  let { tag, category, image, price } = req.body;
 
-  category = category.split(', ');
-  tag = tag.split(',');
+  // category = category.split(', ');
+  tag = tag.split(', ');
 
   const newFlash = new Flash({
     tag,
-    image: req.file.secure_url,
+    image,
     category,
     artist: req.user.id,
     price,
@@ -118,6 +113,16 @@ router.post('/add-flash', uploader.single('imgUrl'), (req, res, next) => {
         .catch(err => res.json(err));
     })
     .catch(err => res.json(err));
+});
+
+router.post('/upload', uploader.single('image'), (req, res, next) => {
+  // console.log('file is: ', req.file)
+  console.log(req.file.secure_url);
+  if (!req.file) {
+    next(new Error('No file uploaded!'));
+    return;
+  }
+  res.json({ secure_url: req.file.secure_url });
 });
 
 // Remove Flash
