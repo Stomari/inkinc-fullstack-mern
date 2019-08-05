@@ -16,6 +16,7 @@ const userSchema = new Schema({
   flash: [{ type: Schema.Types.ObjectId, ref: 'Flash' }],
   artistTattoo: [{ type: Schema.Types.ObjectId, ref: 'Tattoo' }],
   category: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
+  chatHistoric: [{ type: Schema.Types.ObjectId, ref: 'Chat' }]
 }, {
   timestamps: {
     createdAt: 'created_at',

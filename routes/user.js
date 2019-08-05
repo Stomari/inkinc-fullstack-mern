@@ -55,11 +55,17 @@ router.delete('/delete-folder/:folderId', (req, res) => {
     return;
   }
 
-  Folder.findByIdAndRemove(req.params.folderId)
+  User.findByIdAndUpdate(req.user.id, { $pull: { folder: req.params.folderId } })
     .then(() => {
-      res.json({ message: `Folder with ${req.params.folderId} is removed successfully.` });
+      Folder.findByIdAndRemove(req.params.folderId)
+        .then(() => {
+          res.json({ message: `Folder with ${req.params.folderId} is removed successfully.` });
+        })
+        .catch(err => res.json(err));
     })
-    .catch(err => res.json(err));
+    .catch((err) => {
+      res.json(err);
+    });
 });
 
 // Add tattoo to designated folder
