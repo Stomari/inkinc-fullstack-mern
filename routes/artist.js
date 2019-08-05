@@ -23,7 +23,7 @@ router.get('/artists/:id', (req, res) => {
   }
 
   User.findById(req.params.id)
-    .populate('artistTattoo')
+    .populate('artistTattoo', 'workplace')
     .then(artist => res.status(200).json(artist))
     .catch(err => res.json(err));
 });
