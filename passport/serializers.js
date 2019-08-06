@@ -7,6 +7,7 @@ passport.serializeUser((loggedInUser, cb) => {
 
 passport.deserializeUser((userIdFromSession, cb) => {
   User.findById(userIdFromSession)
+  .populate('folder favoriteArtist')
   .then(userDocument => {
     cb(null, userDocument);
   })
