@@ -65,12 +65,14 @@ const authRoutes = require('./routes/auth');
 const artistRoutes = require('./routes/artist');
 const tattooRoutes = require('./routes/tattoo');
 const userRoutes = require('./routes/user');
+const chatRoutes = require('./routes/chat');
 
 app.use('/', index);
 app.use('/api', authRoutes);
 app.use('/api', artistRoutes);
 app.use('/api', tattooRoutes);
 app.use('/api', userRoutes);
+app.use('/api', chatRoutes);
 
 app.use((req, res, next) => {
   // If no routes match, send them the React HTML.
