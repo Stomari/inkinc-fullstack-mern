@@ -3,7 +3,7 @@ module.exports = (server) => {
   const io = require('socket.io').listen(server);
 
   // Other requires
-
+  console.log('test heroku')
   io.on('connection', (socket) => {
     console.log(socket.id);
 
