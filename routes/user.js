@@ -11,7 +11,8 @@ const uploader = require('../configs/cloudinary-setup');
 // Find logged user
 router.get('/user', (req, res) => {
   User.findById(req.user.id)
-    .populate('folder favoriteArtist artistTattoo flash')
+    .populate('favoriteArtist artistTattoo flash')
+    .populate({ path: 'folder', populate: { path: 'image' } })
     .then(user => res.json(user))
     .catch(err => res.json(err));
 });
@@ -69,7 +70,7 @@ router.delete('/delete-folder/:folderId', (req, res) => {
 });
 
 // Add tattoo to designated folder
-router.post('/add-tattoo', (req, res) => {
+router.post('/add-tattoo-folder', (req, res) => {
   const { tattooId, folderId } = req.body;
   Tattoo.findById(tattooId)
     .then((tattoo) => {
