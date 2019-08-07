@@ -9,6 +9,7 @@ passport.use(new LocalStrategy({
 },
 (username, password, done) => {
   User.findOne({ email: username })
+    .populate({ path: 'chatHistoric', populate: { path: 'user' } })
     .then((foundUser) => {
       if (!foundUser) {
         done(null, false, { message: 'Incorrect email' });
