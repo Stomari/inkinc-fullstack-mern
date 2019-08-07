@@ -7,11 +7,11 @@ passport.serializeUser((loggedInUser, cb) => {
 
 passport.deserializeUser((userIdFromSession, cb) => {
   User.findById(userIdFromSession)
-  .populate('folder favoriteArtist')
-  .then(userDocument => {
-    cb(null, userDocument);
-  })
-  .catch(err => {
-    cb(err);
-  })
-});
+    .populate('folder favoriteArtist')
+    .populate({ path: 'chatHistoric', populate: { path: 'user' } })
+    .then(userDocument => {
+      cb(null, userDocument);
+    })
+    .catch(err => {
+      cb(err);
+    })

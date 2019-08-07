@@ -12,7 +12,6 @@ module.exports = (server) => {
     });
 
     socket.on('SEND_MESSAGE', (data) => {
-      console.log(data.room)
       socket.broadcast.to(data.room).emit('RECEIVE_MESSAGE', {
         message: data.message,
         author: data.author,
