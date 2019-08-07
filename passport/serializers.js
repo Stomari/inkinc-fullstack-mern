@@ -7,6 +7,7 @@ passport.serializeUser((loggedInUser, cb) => {
 
 passport.deserializeUser((userIdFromSession, cb) => {
   User.findById(userIdFromSession)
+    .populate('folder favoriteArtist')
     .populate({ path: 'chatHistoric', populate: { path: 'user' } })
     .then(userDocument => {
       cb(null, userDocument);
@@ -14,4 +15,3 @@ passport.deserializeUser((userIdFromSession, cb) => {
     .catch(err => {
       cb(err);
     })
-});

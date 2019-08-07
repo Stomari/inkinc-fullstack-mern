@@ -29,10 +29,14 @@ router.get('/artists/:id', (req, res) => {
 });
 
 // Edit current logged artist profile
-router.put('/edit-artist', uploader.single('imgUrl'), (req, res) => {
-  const { category, workplace, about } = req.body;
-  User.findByIdAndUpdate(req.user.id, { $set: { category, workplace, profileImg: req.file.secure_url, about } })
-    .then(artist => res.status(200).json(artist))
+router.put('/edit-artist', (req, res) => {
+  const { name, category, workplace, image, about } = req.body;
+  console.log(req.body);
+  User.findByIdAndUpdate(req.user.id, { $set: { name, category, workplace, profileImg: image, about } })
+    .then((artist) => {
+      console.log('updated');
+      res.status(200).json(artist)
+    })
     .catch(err => res.json(err));
 });
 
