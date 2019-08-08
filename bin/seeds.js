@@ -12,7 +12,8 @@ const Category = require('../models/Category');
 const bcryptSalt = 10;
 
 mongoose
-  .connect('mongodb://heroku_zr2pwl5n:9rhdnvu0hdqv22lu5v6tjd3jtj@ds141185.mlab.com:41185/heroku_zr2pwl5n', { useNewUrlParser: true })
+  // .connect('mongodb://heroku_zr2pwl5n:9rhdnvu0hdqv22lu5v6tjd3jtj@ds141185.mlab.com:41185/heroku_zr2pwl5n', { useNewUrlParser: true })
+  .connect(process.env.MONGODB_URI, { useNewUrlParser: true })
   .then((x) => {
     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`);
   })
@@ -97,3 +98,6 @@ Category.deleteMany()
     mongoose.disconnect();
     throw err;
   });
+
+
+  // kat@email.com; 
