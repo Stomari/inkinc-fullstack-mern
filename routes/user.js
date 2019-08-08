@@ -94,7 +94,6 @@ router.put('/folder/:folderId/remove/:tattooId', (req, res) => {
 
   Folder.findByIdAndUpdate(req.params.folderId, { $pull: { image: req.params.tattooId } })
     .then(() => {
-      console.log('IMAGE ID', req.params.folderId);
       res.json({ message: `Folder with ${req.params.folderId} is updated successfully.` });
     })
     .catch((err) => {
