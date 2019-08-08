@@ -17,7 +17,7 @@ module.exports = (server) => {
         author: data.author,
       });
     });
-    
+
     socket.on('DISCONNECT', () => {
       console.log('Client disconnected');
       io.emit('client disconnected');

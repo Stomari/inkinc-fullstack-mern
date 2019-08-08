@@ -12,6 +12,7 @@ const uploader = require('../configs/cloudinary-setup');
 router.get('/user', (req, res) => {
   User.findById(req.user.id)
     .populate('favoriteArtist artistTattoo flash')
+    .populate({ path: 'chatHistoric', populate: { path: 'user' } })
     .populate({ path: 'folder', populate: { path: 'image' } })
     .then(user => res.json(user))
     .catch(err => res.json(err));
@@ -36,6 +37,12 @@ router.put('/profile-pic', uploader.single('imgUrl'), (req, res, next) => {
 // Create empty folder
 router.post('/create-folder', (req, res) => {
   const { name } = req.body;
+
+  if (!name) {
+    res.status(400).json({ message: 'Folder name required' });
+    return;
+  }
+
   const newFolder = new Folder({
     name,
   });

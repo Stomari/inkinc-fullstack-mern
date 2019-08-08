@@ -9,9 +9,10 @@ passport.deserializeUser((userIdFromSession, cb) => {
   User.findById(userIdFromSession)
     .populate('folder favoriteArtist')
     .populate({ path: 'chatHistoric', populate: { path: 'user' } })
-    .then(userDocument => {
+    .then((userDocument) => {
       cb(null, userDocument);
     })
-    .catch(err => {
+    .catch((err) => {
       cb(err);
-    })
+    });
+});
