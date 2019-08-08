@@ -23,7 +23,7 @@ router.get('/artists/:id', (req, res) => {
   }
 
   User.findById(req.params.id)
-    .populate('artistTattoo flash')
+    .populate('artistTattoo flash category')
     .then(artist => res.status(200).json(artist))
     .catch(err => res.json(err));
 });
@@ -31,11 +31,9 @@ router.get('/artists/:id', (req, res) => {
 // Edit current logged artist profile
 router.put('/edit-artist', (req, res) => {
   const { name, category, workplace, image, about } = req.body;
-  console.log(req.body);
   User.findByIdAndUpdate(req.user.id, { $set: { name, category, workplace, profileImg: image, about } })
     .then((artist) => {
-      console.log('updated');
-      res.status(200).json(artist)
+      res.status(200).json(artist);
     })
     .catch(err => res.json(err));
 });

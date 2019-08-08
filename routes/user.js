@@ -18,13 +18,10 @@ router.get('/user', (req, res) => {
 });
 
 // Edit profile picture
-router.put('/profile-pic', uploader.single('imgUrl'), (req, res, next) => {
-  if (!req.file) {
-    next(new Error('No file uploaded!'));
-    return;
-  }
-
-  User.findByIdAndUpdate(req.user.id, { $set: { profileImg: req.file.secure_url } })
+router.put('/profile-pic', (req, res, next) => {
+  const { image } = req.body;
+  console.log('imageeeee', image);
+  User.findByIdAndUpdate(req.user.id, { $set: { profileImg: image } })
     .then(() => {
       res.json({ message: `User with ${req.user.id} is updated successfully.` });
     })
@@ -90,6 +87,7 @@ router.put('/folder/:folderId/remove/:tattooId', (req, res) => {
 
   Folder.findByIdAndUpdate(req.params.folderId, { $pull: { image: req.params.tattooId } })
     .then(() => {
+      console.log('IMAGE ID', req.params.folderId);
       res.json({ message: `Folder with ${req.params.folderId} is updated successfully.` });
     })
     .catch((err) => {
