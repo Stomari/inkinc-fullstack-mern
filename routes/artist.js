@@ -120,8 +120,6 @@ router.post('/add-flash', (req, res, next) => {
 });
 
 router.post('/upload', uploader.single('image'), (req, res, next) => {
-  // console.log('file is: ', req.file)
-  console.log(req.file.secure_url);
   if (!req.file) {
     next(new Error('No file uploaded!'));
     return;

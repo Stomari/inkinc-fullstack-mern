@@ -1,11 +1,7 @@
 const express = require('express');
-const mongoose = require('mongoose');
 
 const router = express.Router();
 const User = require('../models/User');
-const Tattoo = require('../models/Tattoo');
-const Folder = require('../models/Folder');
-const uploader = require('../configs/cloudinary-setup');
 const Chat = require('../models/Chat');
 
 router.get('/has-chat/:artistId', (req, res) => {
@@ -13,7 +9,9 @@ router.get('/has-chat/:artistId', (req, res) => {
     .then((chat) => {
       res.json(chat);
     })
-    .catch(err => res.json(err));
+    .catch((err) => {
+      throw new Error(err);
+    });
 });
 
 router.get('/has-chat-artist/:userId', (req, res) => {
@@ -21,8 +19,10 @@ router.get('/has-chat-artist/:userId', (req, res) => {
     .then((chat) => {
       res.json(chat);
     })
-    .catch(err => res.json(err));
-})
+    .catch((err) => {
+      throw new Error(err);
+    });
+});
 
 router.get('/create-chat/:artistId', (req, res) => {
   const newChat = new Chat({
