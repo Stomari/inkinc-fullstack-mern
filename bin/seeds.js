@@ -100,4 +100,4 @@ Category.deleteMany()
   });
 
 
-  // kat@email.com; 
+  // kat@email.com; paul@email.com; scott@email.com, don@email.com; kim@email.com; oliver@email.com; cally@email.com; ami@email.com; horiyoshi@email.com;
