@@ -10,7 +10,7 @@ const Flash = require('../models/Flash');
 // All artists
 router.get('/artists', (req, res) => {
   User.find({ role: 'Artist' })
-    .populate('artistTattoo')
+    .populate('artistTattoo category')
     .then(artists => res.json(artists))
     .catch(err => res.json(err));
 });
